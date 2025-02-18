@@ -15,11 +15,9 @@ export const Balance: React.FC<BalanceProps> = ({ customerPoints }) => {
             <h2 className="text-xl font-semibold text-gray-800">Your Points Balance</h2>
           </div>
           <div>
-            <p className="text-4xl font-semibold text-blue-600 mt-2">
-            <div className="flex items-center space-x-3">
+            <p className="text-4xl font-semibold text-blue-600 mt-2 flex items-center space-x-3">
               <TrophyIcon className="h-6 w-6 text-yellow-500" />
               <span>{customerPoints}</span>
-            </div>
             </p>
           </div>
         </div>
