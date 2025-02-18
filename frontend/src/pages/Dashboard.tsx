@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 
 import Balance from '../components/Balance';
+import Rewards from '../components/Rewards';
 
 const GET_CUSTOMER_POINTS = gql`
   query GetCustomerPoints {
@@ -17,6 +18,7 @@ function Dashboard() {
   return (
     <div className="grid grid-cols-12 gap-6 mt-8">
       <Balance customerPoints={ data?.customerPoints } />
+      <Rewards customerPoints={ data?.customerPoints }/>
     </div>
   );
 }
