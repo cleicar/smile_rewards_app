@@ -95,8 +95,15 @@ GEM
     drb (2.2.1)
     error_highlight (0.7.0)
     erubi (1.13.1)
+    fiber-storage (1.0.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    graphiql-rails (1.10.1)
+      railties
+    graphql (2.4.9)
+      base64
+      fiber-storage
+      logger
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     io-console (0.8.0)
@@ -227,6 +234,8 @@ DEPENDENCIES
   debug
   dotenv
   error_highlight (>= 0.4.0)
+  graphiql-rails (~> 1.10, >= 1.10.1)
+  graphql (~> 2.4, >= 2.4.9)
   pg (~> 1.1)
   puma (>= 5.0)
   rack-cors
