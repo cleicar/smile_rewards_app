@@ -8,12 +8,6 @@ import client from "./apolloClient";
 import BasePage from "./pages/BasePage";
 import Dashboard from './pages/Dashboard';
 
-declare global {
-  interface Window {
-    SmileUI: any;
-  }
-}
-
 function App() {
   return (
     <>
