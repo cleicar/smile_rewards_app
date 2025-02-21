@@ -34,6 +34,7 @@ const useSmileAuth = () => {
 
     window.SmileUI.ready()
       .then((smileUiInstance: { smile: { customer: any; }; }) => {
+        console.log("SmileUI is ready:", smileUiInstance);
         loadCurrentCustomer(smileUiInstance.smile.customer);
       })
       .catch((err: any) => {

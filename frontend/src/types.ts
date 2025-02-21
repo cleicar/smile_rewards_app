@@ -8,6 +8,22 @@ export type Customer = {
   state?: string;
 };
 
+export type PointsProduct = {
+  id: string;
+  name: string;
+  points_price: number;
+  exchange_description: string;
+  exchange_type: string;
+};
+
+export type Reward = {
+  name: string;
+  created_at: string;
+  points_price: number;
+  minimum_points_price: number;
+  points_product: PointsProduct;
+};
+
 declare global {
   interface Window {
     SmileUI: any;
