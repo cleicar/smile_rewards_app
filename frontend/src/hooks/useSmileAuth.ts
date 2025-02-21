@@ -1,41 +1,76 @@
 import { useEffect, useState } from "react";
 import { gql, useQuery } from "@apollo/client";
+import { Customer } from "../types";
 
 const GET_JWT_TOKEN = gql`
-  query GetCustomerJwt($customerId: ID!) {
+  query($customerId: ID!) {
     customerJwt(customerId: $customerId)
   }
 `;
+
+const setCurrentCustomer = (customer: any) => {
+  window.currentCustomer = customer;
+};
+
+export const getCurrentCustomer = () => {
+  return window.currentCustomer || null;
+};
 
 const useSmileAuth = () => {
   const shopifyCustomerId = process.env.REACT_APP_SHOPIFY_CUSTOMER_ID;
   const smileKey = process.env.REACT_APP_SMILE_PUBLIC_KEY;
 
-  const { loading: loadingToken, error: errorToken, data: tokenData } = useQuery(GET_JWT_TOKEN, {
+  const { loading, error, data } = useQuery(GET_JWT_TOKEN, {
     variables: { customerId: shopifyCustomerId },
   });
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  const initializeSmileUI = () => {
+    window.SmileUI.init({
+      channel_key: smileKey,
+      customer_identity_jwt: data.customerJwt,
+    });
+
+    window.SmileUI.ready()
+      .then((smileUiInstance: { smile: { customer: any; }; }) => {
+        console.log("SmileUI is ready:", smileUiInstance);
+        loadCurrentCustomer(smileUiInstance.smile.customer);
+      })
+      .catch((err: any) => {
+        console.error("Error while initializing SmileUI:", err);
+      });
+  };
+
+  const loadCurrentCustomer = (customer: Customer) => {
+    if (customer) {
+      setCurrentCustomer(customer);
+      setIsAuthenticated(true);
+    } else {
+      console.warn("SmileUI is initialized but customer data is not available yet.");
+    }
+  };
+
   useEffect(() => {
-    if (!loadingToken && tokenData?.customerJwt && !isAuthenticated) {
-      if (!window.SmileUI) return; // Smile.js not loaded
+    if(!data?.customerJwt) {
+      console.log("Waiting for JWT token to be available.");
+      return;
+    }
 
-      if (!smileKey) return; // Smile public key not set
-      try {
-        window.SmileUI.init({
-          channel_key: smileKey,
-          customer_identity_jwt: tokenData.customerJwt,
+    if (!loading && !isAuthenticated) {
+      if (window.SmileUI) {
+        initializeSmileUI();
+      } else {
+        console.log("Waiting for SmileUI to load...");
+        document.addEventListener("smile-ui-loaded", () => {
+          console.log("SmileUI was loaded.");
+          initializeSmileUI();
         });
-
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error("Error initializing Smile.js:", error);
       }
     }
-  }, [loadingToken, tokenData, isAuthenticated, smileKey]);
+  }, [loading, data, isAuthenticated, smileKey]);
 
-  return { isAuthenticated, loadingToken, errorToken };
+  return { isAuthenticated, loading, error, getCurrentCustomer };
 };
 
 export default useSmileAuth;
