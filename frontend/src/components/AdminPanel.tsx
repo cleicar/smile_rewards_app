@@ -33,8 +33,13 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onPointsUpdated }) => {
       return;
     }
 
+    const points = parseInt(pointsChange);
+
+    if (!window.confirm(`Are you sure you want to ${points > 0 ? "add" : "remove"} ${points} points to this customer?`)) {
+      return;
+    }
+    
     try {
-      const points = parseInt(pointsChange);
       const { data } = await earnPoints({
         variables: {
           input: {

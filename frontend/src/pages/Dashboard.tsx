@@ -4,12 +4,14 @@ import { useSmileAuth, setCurrentCustomer } from "../hooks/useSmileAuth";
 import Balance from '../components/Balance';
 import RewardsList from '../components/RewardsList';
 import WaysToEarn from "../components/WaysToEarn";
+import AdminPanel from "../components/AdminPanel";
 
 import { Customer } from "../types";
 
 export const Dashboard = () => {
   const { isAuthenticated, loading, error } = useSmileAuth();
   const [customerPoints, setCustomerPoints] = useState<number | null>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   const refreshCustomerPoints = () => {
     if (window.SmileUI?.smile) {
@@ -30,6 +32,8 @@ export const Dashboard = () => {
   useEffect(() => {
     if (isAuthenticated) {
       refreshCustomerPoints();
+      const urlParams = new URLSearchParams(window.location.search);
+      setIsAdmin(urlParams.get("admin") === "true");
     }
   }, [isAuthenticated]);
 
@@ -41,6 +45,9 @@ export const Dashboard = () => {
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
       <div className="col-span-1 bg-white shadow-xs rounded-xl p-6">
         <Balance customerPoints={customerPoints} />
+        {isAdmin && (
+          <AdminPanel onPointsUpdated={refreshCustomerPoints} />
+        )}
       </div>
       <div className="col-span-1 xl:col-span-2 space-y-4">
         <RewardsList 
