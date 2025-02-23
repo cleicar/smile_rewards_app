@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 
-import { GiftIcon, CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import { GiftIcon } from "@heroicons/react/24/solid";
 import { Reward, PointsProduct } from "../types";
 
 import CouponModal from "./CouponModal";
@@ -96,17 +96,13 @@ export const RewardItem: React.FC<RewardItemProps> = ({ reward, customerPoints, 
           <span className={`font-semibold ${canRedeem ? "text-green-600" : "text-red-500"}`}>
             {pointsProduct.exchange_description}
           </span>
-          {canRedeem ? (
-            <button
-              className={`px-4 py-2 text-white font-semibold rounded-lg shadow-md primary-button`}
-              onClick={handleRedeem}
-              disabled={loading}
-            >
-              {loading ? "Processing..." : "Redeem"}
-            </button>
-          ) : (
-            <XCircleIcon className="h-6 w-6 text-red-500" />
-          )}
+          <button
+            className={`px-4 py-2 text-white font-semibold rounded-lg shadow-md ${canRedeem ? "primary-button" : "disabled-button"}`}
+            onClick={handleRedeem}
+            disabled={loading || !canRedeem}
+          >
+            {loading ? "Processing..." : "Redeem"}
+          </button>
         </div>
       </li>
 

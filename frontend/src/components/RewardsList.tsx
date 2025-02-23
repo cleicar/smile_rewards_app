@@ -3,9 +3,13 @@ import React, { useEffect, useState } from "react";
 import { Reward, Customer } from "../types";
 import RewardItem from "./RewardItem";
 
-export const RewardsList: React.FC = () => {
+type RewardsListProps = {
+  customerPoints: number;
+  onPointsUpdated: () => void;
+};
+
+export const RewardsList: React.FC<RewardsListProps> = ({ customerPoints, onPointsUpdated }) => {
   const [rewards, setRewards] = useState<Reward[]>([]);
-  const [customerPoints, setCustomerPoints] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,28 +28,8 @@ export const RewardsList: React.FC = () => {
     }
   };
 
-  const refreshCustomerPoints = () => {
-    if (window.SmileUI?.smile) {
-      window.SmileUI.smile.fetchCustomer().then((customer: Customer) => {
-        if (customer?.points_balance !== undefined) {
-          setCustomerPoints(customer.points_balance);
-        } else {
-          setError("Failed to load the updated customer data.");
-        }
-      }).catch((err: unknown) => {
-        setError("Failed to refresh customer points. Please refresh the page.");
-      });
-    }
-  };
-
   useEffect(() => {
-    if (window.SmileUI) {
-      refreshCustomerPoints();
-      fetchRewards();
-    } else {
-      setError("SmileUI not loaded. Please try again later.");
-      setLoading(false);
-    }
+    fetchRewards();
   }, []);
 
   if (loading) return <p>Loading rewards...</p>;
@@ -66,7 +50,7 @@ export const RewardsList: React.FC = () => {
                     key={reward.points_product.id} 
                     reward={reward} 
                     customerPoints={customerPoints || 0}
-                    onRedeemSuccess={refreshCustomerPoints}
+                    onRedeemSuccess={onPointsUpdated}
                   />
                 ))
               ) : (
