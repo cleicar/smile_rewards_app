@@ -1,4 +1,4 @@
-# app/graphql/mutations/redeem_reward_mutation.rb
+# frozen_string_literal: true
 module Mutations
   class RedeemRewardMutation < BaseMutation
     argument :points_product_id, ID, required: true

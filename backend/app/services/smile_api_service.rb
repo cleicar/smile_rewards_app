@@ -1,4 +1,5 @@
-# app/services/smile_api_service.rb
+# frozen_string_literal: true
+
 require "uri"
 require "json"
 require "net/http"

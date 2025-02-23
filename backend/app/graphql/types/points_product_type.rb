@@ -1,4 +1,4 @@
-# app/graphql/types/points_product_type.rb
+# frozen_string_literal: true
 module Types
   class PointsProductType < Types::BaseObject
     field :id, ID, null: false
