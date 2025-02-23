@@ -8,7 +8,7 @@ const GET_JWT_TOKEN = gql`
   }
 `;
 
-const setCurrentCustomer = (customer: any) => {
+export const setCurrentCustomer = (customer: any) => {
   window.currentCustomer = customer;
 };
 
@@ -16,7 +16,7 @@ export const getCurrentCustomer = () => {
   return window.currentCustomer || null;
 };
 
-const useSmileAuth = () => {
+export const useSmileAuth = () => {
   const shopifyCustomerId = process.env.REACT_APP_SHOPIFY_CUSTOMER_ID;
   const smileKey = process.env.REACT_APP_SMILE_PUBLIC_KEY;
 

@@ -23,3 +23,7 @@ code {
 .primary-button:hover {
   background-color: #4d4fff;
 }
+
+.disabled-button {
+  background-color: #d1d5db;
+}
