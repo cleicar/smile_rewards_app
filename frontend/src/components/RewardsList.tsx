@@ -9,41 +9,47 @@ export const RewardsList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (window.SmileUI) {
-      try {
-        const customer: Customer | null = window.SmileUI?.smile?.customer;
-        
-        if (customer) {
+  const fetchRewards = () => {
+    if (!rewards.length && window.SmileUI) {  
+      window.SmileUI.smile.fetchAllCustomerPointsProducts()
+        .then((rewards: Reward[]) => {
+          setRewards(rewards);
+          setLoading(false);
+        })
+        .catch((err: unknown) => {
+          console.error("Error fetching rewards:", err);
+          setError("Failed to load rewards. Please try again later.");
+          setLoading(false);
+        });
+    }
+  };
+
+  const refreshCustomerPoints = () => {
+    if (window.SmileUI?.smile) {
+      window.SmileUI.smile.fetchCustomer().then((customer: Customer) => {
+        if (customer?.points_balance !== undefined) {
           setCustomerPoints(customer.points_balance);
         } else {
-          console.warn("No customer data found in SmileUI.");
-          setError("Failed to load customer data.");
+          setError("Failed to load the updated customer data.");
         }
+      }).catch((err: unknown) => {
+        setError("Failed to refresh customer points. Please refresh the page.");
+      });
+    }
+  };
 
-        window.SmileUI.smile.fetchAllCustomerPointsProducts()
-          .then((rewards: Reward[]) => {
-            setRewards(rewards);
-            setLoading(false);
-          })
-          .catch((err: unknown) => {
-            console.error("Error fetching rewards:", err);
-            setError("Failed to load rewards. Please try again later.");
-            setLoading(false);
-          });
-      } catch (err) {
-        console.error("Error while accessing SmileUI:", err);
-        setError("Failed to load data. Please refresh the page.");
-        setLoading(false);
-      }
+  useEffect(() => {
+    if (window.SmileUI) {
+      refreshCustomerPoints();
+      fetchRewards();
     } else {
-      console.warn("SmileUI is not loaded. Unable to fetch data.");
       setError("SmileUI not loaded. Please try again later.");
       setLoading(false);
     }
   }, []);
 
   if (loading) return <p>Loading rewards...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <div className="col-span-full xl:col-span-8 bg-white shadow-xs rounded-xl">
@@ -52,25 +58,22 @@ export const RewardsList: React.FC = () => {
           <h2 className="text-xl font-semibold text-gray-800">Ways to Redeem</h2>
         </div>
         <div className="p-3">
-          { error ? ( 
-            <p className="text-red-500">{error}</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <ul className="space-y-4">
-                {rewards.length > 0 ? (
-                  rewards.map((reward) => (
-                    <RewardItem 
-                      key={reward.points_product.id} 
-                      reward={reward} 
-                      customerPoints={customerPoints || 0} 
-                    />
-                  ))
-                ) : (
-                  <p className="text-gray-500 text-center">No rewards available.</p>
-                )}
-              </ul>
-            </div>
-          )}
+          <div className="overflow-x-auto">
+            <ul className="space-y-4">
+              {rewards.length > 0 ? (
+                rewards.map((reward) => (
+                  <RewardItem 
+                    key={reward.points_product.id} 
+                    reward={reward} 
+                    customerPoints={customerPoints || 0}
+                    onRedeemSuccess={refreshCustomerPoints}
+                  />
+                ))
+              ) : (
+                <p className="text-gray-500 text-center">No rewards available.</p>
+              )}
+            </ul>
+          </div>
         </div>
       </div>
     </div>

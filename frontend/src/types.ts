@@ -14,6 +14,9 @@ export type PointsProduct = {
   points_price: number;
   exchange_description: string;
   exchange_type: string;
+  variable_points_step: number;
+  variable_points_step_reward_value: number;
+  points_price_max: number;
 };
 
 export type Reward = {
@@ -23,6 +26,16 @@ export type Reward = {
   minimum_points_price: number;
   points_product: PointsProduct;
 };
+
+export type FulfilledReward = {
+  id: string;
+  name: string;
+  imageUrl?: string;
+  usageInstructions?: string;
+  sourceDescription?: string;
+  code?: string;
+};
+
 
 declare global {
   interface Window {
