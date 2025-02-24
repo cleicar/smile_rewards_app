@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Reward, Customer } from "../types";
+import { Reward } from "../types";
 import RewardItem from "./RewardItem";
 
 type RewardsListProps = {
