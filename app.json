@@ -1,0 +1,9 @@
+{
+  "name": "Smile Rewards Backend",
+  "scripts": {
+    "postdeploy": "cd backend && bundle exec rails db:migrate"
+  },
+  "env": {
+    "BUILDPACK_URL": "https://github.com/heroku/heroku-buildpack-ruby"
+  }
+}
