@@ -1,0 +1,2 @@
+web: cd $PROJECT_PATH && bundle exec rails server -p $PORT -e production
+release: cd $PROJECT_PATH && bundle install && bundle exec rails db:migrate
