@@ -1,0 +1,1 @@
+web: cd frontend && yarn build && cd ../backend && bundle exec puma -C config/puma.rb
