@@ -1,1 +1,2 @@
-web: cd frontend && yarn build && cd ../backend && bundle exec puma -C config/puma.rb
+web: cd backend && bundle exec rails server -p $PORT -e production
+release: cd backend && bundle exec rails db:migrate
